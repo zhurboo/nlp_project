@@ -65,7 +65,7 @@ class RNNModel(nn.Module):
         super(RNNModel, self).__init__()
         self.lockdrop = LockedDropout()
         self.encoder = nn.Embedding.from_pretrained(weight, freeze=False)
-        self.rnns = nn.LSTM(emsize, nhid, nlayers, dropout=dropoutrnn)
+        self.rnns = nn.GRU(emsize, nhid, nlayers, dropout=dropoutrnn)
        
         if wdrop:
             self.rnns = WeightDrop(self.rnns, ['weight_hh_l{}'.format(i) for i in range(nlayers)], wdrop)

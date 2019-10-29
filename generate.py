@@ -12,7 +12,7 @@ parser.add_argument('--data', type=str, default='data/title_storyline_story/')
 parser.add_argument('--corpus', type=str, default='data/corpus.dt')
 parser.add_argument('--conditional_data', type=str, default='data/title_storyline/test.txt')
 parser.add_argument('--checkpoint', type=str, default='data/model.pt')
-parser.add_argument('--outf', type=str, default='data/stroys_out.txt')
+parser.add_argument('--outf', type=str, default='data/stroys_out3.txt')
 parser.add_argument('--temperature', type=float, default=0.5, help='temperature - higher will increase diversity')
 args = parser.parse_args()
 
@@ -48,6 +48,8 @@ with torch.no_grad():
                 now += 1
                 if cond_data[now] == eos_id:
                     break
+            now += 1
+            cnt += 1
             while True:
                 word_weights = output.squeeze().data.div(args.temperature).exp().cpu()
                 word_idx = torch.multinomial(word_weights, 1)[0]
@@ -58,7 +60,6 @@ with torch.no_grad():
                 outf.write(word+' ')
                 input.data.fill_(word_idx)
                 output, hidden = model(input, hidden)
-            now += 1
-            cnt += 1
             if cnt %100 == 0:
                 print(cnt)
+            

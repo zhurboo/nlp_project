@@ -17,7 +17,7 @@ parser.add_argument('--cuda', action='store_true', default=True)
 
 parser.add_argument('--data', type=str, default='data/title_storyline_story/')
 parser.add_argument('--corpus', type=str, default='data/corpus.dt')
-parser.add_argument('--epochs', type=int, default=150)
+parser.add_argument('--epochs', type=int, default=300)
 parser.add_argument('--batch_size', type=int, default=80)
 parser.add_argument('--bptt', type=int, default=70)
 
@@ -81,7 +81,6 @@ if args.optimizer == 'sgd':
     optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, weight_decay=args.wdecay)
 else:
     optimizer = torch.optim.Adam(model.parameters(), weight_decay=args.wdecay)
-scheduler = StepLR(optimizer, step_size=30, gamma=0.2)
 
 ###############################################################################
 # evaluate funcition
@@ -110,7 +109,7 @@ def train(model, criterion, optimizer, train_data, batch_size):
         # targets: [seq*batch]
         optimizer.zero_grad()
         output, hidden = model(data, hidden)
-        hidden = hidden[0].data,hidden[1].data
+        hidden = hidden.data
         loss = criterion(output, targets)
         loss.backward()
         if args.clip:
@@ -135,7 +134,6 @@ try:
         print('-' * 89)
         print('| end of epoch {:3d} | valid loss {:5.2f} | valid ppl {:8.2f}'.format(epoch, val_loss, np.exp(val_loss)))
         print('-' * 89)
-        scheduler.step()
         if val_loss < best_loss:
             model_save(model, criterion, args.save)
             print('Saving model (new best validation)')
