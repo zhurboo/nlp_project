@@ -10,7 +10,7 @@
 - 数据集：ROCStories
 - 训练集大小：98,159
 - 测试集大小：3,744
-- 数据集连接：http://cs.rochester.edu/nlp/rocstories/
+- 数据集链接：http://cs.rochester.edu/nlp/rocstories/
 
 # 评测标准
 
